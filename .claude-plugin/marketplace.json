@@ -1,11 +1,14 @@
 {
   "name": "kalent",
-  "owner": { "name": "Kalent", "url": "https://kalent.ai" },
+  "owner": {
+    "name": "Kalent",
+    "url": "https://kalent.ai"
+  },
   "plugins": [
     {
       "name": "kalent-sourcing",
       "source": "./",
-      "description": "Six agents IA de sourcing branchés sur le MCP Kalent."
+      "description": "Six AI sourcing agents powered by the Kalent MCP."
     }
   ]
 }

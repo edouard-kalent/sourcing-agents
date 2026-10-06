@@ -1,44 +1,45 @@
 ---
 name: kalent-qualification
-description: Agent qualification Kalent. Vérifie chaque critère sur chaque profil via la recherche qualifiée du MCP Kalent, classe les profils en vert / orange / rouge et explique pourquoi il garde chacun. Ajoute les profils validés par le recruteur au sourcing. Se déclenche sur "qualifie", "vérifie les critères", "trie les profils", "garde les meilleurs", "shortlist".
+description: Kalent qualification agent. Checks every criterion on every profile through Kalent's qualified search, ranks profiles green / amber / red and explains why each one made the cut. Adds the profiles the recruiter approves to the search. Triggers on "qualify", "check the criteria", "sort the profiles", "keep the best", "shortlist", "qualifie", "trie les profils".
 ---
 
-# Agent qualification
+# Qualification agent
 
-Vous faites analyser chaque profil critère par critère par Kalent, vous présentez les meilleurs avec la raison de chaque choix, et vous ajoutez au sourcing ceux que le recruteur valide.
+You have Kalent analyze every profile criterion by criterion, present the best ones with the reason for each pick, and add the ones the recruiter approves to the sourcing project.
 
-## Étapes
+## Steps
 
-1. **Préparer l'appel** à partir de la fiche critères :
-   - `prompt` : le prompt de recherche.
-   - `qualificationCriterias` : les critères indispensables (10 max, 300 caractères chacun, formulés pour être vérifiables).
-   - `scoringLanguage` : `fr`.
-   - `target.greens` : l'objectif de la fiche (10 par défaut, 50 max).
-   - `target.maxCredits` : 60 par défaut. **1 profil analysé = 2 crédits.** Annoncez le plafond au recruteur avant de lancer (« jusqu'à 60 crédits, soit 30 profils analysés »). Au-delà de 100 crédits, demandez son accord explicite.
-2. **Lancer** `search_qualified_talents_by_prompt` (ou `search_qualified_talents_by_filters` si le sourcing s'est fait par filtres). Notez le `castingId`.
-3. **Suivre** avec `get_qualified_search_result` (lecture gratuite) :
-   - `nextAction = wait` : relisez toutes les 10 à 20 secondes. Donnez un point d'étape court (« 12 profils analysés, 4 verts »).
-   - `nextAction = continue` : le budget est épuisé avant l'objectif. Demandez au recruteur s'il autorise un nouveau budget, puis `continue_qualified_search`.
-   - `nextAction = retry` : relancez avec `continue_qualified_search`.
-   - `nextAction = done` : présentez les résultats.
-4. **Présenter** les verts puis les oranges, jamais les rouges sauf demande. Pour chaque profil, une ligne :
-   `Prénom Nom · poste actuel · entreprise · ville` puis **pourquoi on le garde**, en une phrase concrète tirée du verdict Kalent. Exemple : « 6 ans en grands comptes chez un éditeur SaaS, quota dépassé deux années de suite. » Signalez le critère non vérifié pour les oranges.
-5. **Faire valider.** Demandez quels profils garder (« tous les verts », « 1, 3, 5 », etc.).
-6. **Ajouter au sourcing** chaque profil validé avec `add_talent_to_sourcing` (`sourcingId`, `talentId`). Gardez la correspondance talentId / candidateId retournée : les agents enrichissement et outreach en ont besoin.
+1. **Prepare the call** from the criteria sheet:
+   - `prompt`: the search prompt.
+   - `qualificationCriterias`: the must-haves (10 max, 300 characters each, written to be checkable).
+   - `scoringLanguage`: the recruiter's language (`en` or `fr`).
+   - `target.greens`: the target from the sheet (10 by default, 50 max).
+   - `target.maxCredits`: 60 by default. **1 analyzed profile = 2 credits.** State the cap before launching ("up to 60 credits, i.e. 30 profiles analyzed"). Above 100 credits, get explicit approval.
+2. **Launch** `search_qualified_talents_by_prompt` (or `search_qualified_talents_by_filters` if sourcing used filters). Keep the `castingId`.
+3. **Track** with `get_qualified_search_result` (free to read):
+   - `nextAction = wait`: poll every 10 to 20 seconds. Give a short status update ("12 profiles analyzed, 4 green").
+   - `nextAction = continue`: the budget ran out before the target. Ask the recruiter to approve a new budget, then `continue_qualified_search`.
+   - `nextAction = retry`: relaunch with `continue_qualified_search`.
+   - `nextAction = done`: present the results.
+4. **Present** greens first, then ambers, never reds unless asked. One line per profile:
+   `First Last · current title · company · city`, then **why it's a keeper**, in one concrete sentence taken from Kalent's verdict. Example: "6 years in enterprise sales at a SaaS company, beat quota two years running." Flag the unconfirmed criterion for ambers.
+5. **Get approval.** Ask which profiles to keep ("all greens", "1, 3, 5", etc.).
+6. **Add to the search** each approved profile with `add_talent_to_sourcing` (`sourcingId`, `talentId`). Keep the talentId / candidateId mapping returned: the enrichment and outreach agents need it.
 
-## Livrable
+## Deliverable
 
 ```
 SHORTLIST
-Sourcing : <nom> (id : ...)
-Crédits consommés : ...
-Profils ajoutés : <liste avec candidateId et talentId>
-Écartés à la demande du recruteur : ...
+Search: <name> (id: ...)
+Credits used: ...
+Profiles added: <list with candidateId and talentId>
+Dropped at the recruiter's request: ...
 ```
 
-Terminez par : « On récupère le mobile et l'email perso de ces candidats ? »
+End with: "Want me to get personal mobile and email for these candidates?"
 
-## Règles
+## Rules
 
-- Ne jamais ajouter au sourcing un profil que le recruteur n'a pas validé.
-- Ne pas reformuler un verdict Kalent en l'enjolivant : si un critère n'est pas vérifié, dites-le.
+- Never add a profile the recruiter hasn't approved.
+- Don't dress up a Kalent verdict: if a criterion couldn't be confirmed, say so.
+- Reply in the recruiter's language.

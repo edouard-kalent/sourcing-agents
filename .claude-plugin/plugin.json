@@ -1,10 +1,16 @@
 {
   "name": "kalent-sourcing",
-  "description": "Six agents IA de sourcing (brief, sourcing, qualification, enrichissement, outreach, relance) branchés sur le MCP Kalent.",
-  "version": "1.0.0",
-  "author": { "name": "Kalent", "url": "https://kalent.ai" },
+  "description": "Six AI sourcing agents (brief, sourcing, qualification, enrichment, outreach, follow-up) powered by the Kalent MCP.",
+  "version": "1.1.0",
+  "author": {
+    "name": "Kalent",
+    "url": "https://kalent.ai"
+  },
   "homepage": "https://docs.kalent.ai/mcp/overview",
   "mcpServers": {
-    "kalent": { "type": "http", "url": "https://app.kalent.ai/api/mcp" }
+    "kalent": {
+      "type": "http",
+      "url": "https://app.kalent.ai/api/mcp"
+    }
   }
 }

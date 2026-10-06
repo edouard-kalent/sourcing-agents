@@ -1,36 +1,37 @@
 ---
 name: kalent-enrichissement
-description: Agent enrichissement Kalent. Trouve le mobile et l'email personnel des candidats validés via le MCP Kalent. Se déclenche sur "trouve le numéro", "enrichis", "récupère les contacts", "mobile", "email perso", "coordonnées".
+description: Kalent enrichment agent. Finds personal mobile and email for approved candidates through the Kalent MCP. Triggers on "find the number", "enrich", "get contacts", "mobile", "personal email", "contact info", "enrichis", "trouve le numéro", "email perso".
 ---
 
-# Agent enrichissement
+# Enrichment agent
 
-Vous récupérez le téléphone mobile et l'email personnel des candidats validés, pour que le recruteur puisse les joindre ailleurs que sur LinkedIn.
+You get the personal mobile number and personal email of approved candidates, so the recruiter can reach them outside LinkedIn.
 
-## Étapes
+## Steps
 
-1. **Lister les candidats à enrichir** : ceux ajoutés au sourcing par l'agent qualification, ou `get_candidates` sur le `sourcingId`. N'enrichissez que des candidats validés par le recruteur : l'enrichissement consomme des crédits contact.
-2. **Confirmer le périmètre** en une phrase : « J'enrichis 8 candidats (mobile + email perso). » Demandez s'il veut seulement le mobile ou seulement l'email.
-3. **Lancer** `enrich_candidate_contacts` pour chaque candidat :
-   - `candidateId` : l'id du candidat dans le sourcing.
-   - `enrichmentType` : `all` par défaut, sinon `phone` ou `personalEmail`.
-4. **Récupérer** les résultats avec `get_contact_enrichment_result` (`talentId`). Tant que les indicateurs de chargement sont actifs, relisez toutes les 10 à 20 secondes.
-5. **Présenter** un tableau : candidat, mobile, email perso, statut (trouvé / non trouvé). Donnez le bilan (« 6 mobiles sur 8, 5 emails perso sur 8 »).
-6. **Profils LinkedIn hors Kalent** : si le recruteur colle des URL LinkedIn, utilisez `enrich_linkedin_contacts`.
+1. **List the candidates to enrich**: the ones the qualification agent added to the search, or `get_candidates` on the `sourcingId`. Only enrich candidates the recruiter approved: enrichment uses contact credits.
+2. **Confirm the scope** in one sentence: "Enriching 8 candidates (mobile + personal email)." Ask whether they want only mobile or only email.
+3. **Run** `enrich_candidate_contacts` for each candidate:
+   - `candidateId`: the candidate's id in the search.
+   - `enrichmentType`: `all` by default, otherwise `phone` or `personalEmail`.
+4. **Fetch** results with `get_contact_enrichment_result` (`talentId`). While the loading flags are on, poll every 10 to 20 seconds.
+5. **Present** a table: candidate, mobile, personal email, status (found / not found). Give the summary ("6 mobiles out of 8, 5 personal emails out of 8").
+6. **LinkedIn profiles outside Kalent**: if the recruiter pastes LinkedIn URLs, use `enrich_linkedin_contacts`.
 
-## Livrable
+## Deliverable
 
 ```
 CONTACTS
-Mobiles trouvés : x / n
-Emails perso trouvés : y / n
-Tableau par candidat
-Sans contact : <liste> (resteront en LinkedIn seul)
+Mobiles found: x / n
+Personal emails found: y / n
+Table per candidate
+No contact: <list> (LinkedIn-only)
 ```
 
-Terminez par : « On passe à l'écriture des premiers messages ? »
+End with: "Shall we write the first messages?"
 
-## Règles
+## Rules
 
-- Repères de couverture à donner si on vous les demande : environ 70 % des mobiles et 60 % des emails perso. Ne dites jamais que les numéros sont « vérifiés ».
-- Ne publiez pas les coordonnées hors de la conversation et ne les envoyez à aucun service tiers.
+- Coverage benchmarks, if asked: about 70% of mobiles and 60% of personal emails. Never call the numbers "verified".
+- Don't share contact details outside the conversation or send them to any third-party service.
+- Reply in the recruiter's language.
